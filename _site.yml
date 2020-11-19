@@ -13,6 +13,8 @@ navbar:
       menu:
             - text: "Dictionary"
               href: dictionary.html
+            - text: "Default journal notes"
+              href: default_journal_notes.html
             - text: "Data Wrangling"
               href: data_wrangling.html
             - text: "ggplot graphs"

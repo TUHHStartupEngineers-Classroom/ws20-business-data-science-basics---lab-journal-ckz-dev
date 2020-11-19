@@ -9,11 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Joschka Schwarz" />
 
-<meta name="date" content="2019-03-25" />
 
-<title>Machine Learning</title>
+<title>Data Wrangling</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -302,9 +300,6 @@ $(document).ready(function () {
       <a href="dictionary.html">Dictionary</a>
     </li>
     <li>
-      <a href="default_journal_notes.html">Default journal notes</a>
-    </li>
-    <li>
       <a href="data_wrangling.html">Data Wrangling</a>
     </li>
     <li>
@@ -330,14 +325,35 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Machine Learning</h1>
-<h4 class="author">Joschka Schwarz</h4>
-<h4 class="date">March 25, 2019</h4>
+<h1 class="title toc-ignore">Data Wrangling</h1>
+<h4 class="date">Nov 5, 2020</h4>
 
 </div>
 
 
-<p>To be filled …</p>
+<div id="example" class="section level1">
+<h1>Example</h1>
+<p>To explore the basic data manipulation verbs of the package <code>dplyr</code>, we’ll use the datasets <code>mtcars</code> (comes with RStudio). The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models). The data is documented in <code>?mtcars</code>.</p>
+<p>The following code chunks will only print something, if you’ve installed the package <code>dplyr</code>. That is why everything is wrapped in a <code>if</code> condition.</p>
+<p>To do so, run:</p>
+<pre class="r"><code>install.packages(&quot;dplyr&quot;)</code></pre>
+<pre class="r"><code>if (&quot;dplyr&quot; %in% rownames(installed.packages())) {
+
+  # Load libraries
+  library(dplyr)
+  
+  # Print the dataframe
+  mtcars
+
+}</code></pre>
+<p><code>filter()</code> allows you to subset observations based on their values. The first argument is the name of the data frame. The second and subsequent arguments are the expressions that filter the data frame. For example, we can select all cars with 4 cylinders and more than 90 horsepower:</p>
+<pre class="r"><code>if (&quot;dplyr&quot; %in% rownames(installed.packages())) {
+
+  filter(mtcars, cyl == 4, hp &gt; 90)
+  
+}  </code></pre>
+<p>…</p>
+</div>
 
 
 
