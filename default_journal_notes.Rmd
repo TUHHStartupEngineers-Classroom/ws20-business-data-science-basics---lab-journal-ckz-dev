@@ -64,3 +64,12 @@ numbers[1:10]
 # This will plot a histogram of 100 random elements of the vector numbers
 hist(sample(numbers, 100, replace = T))
 ```
+
+Working with Tribble
+
+```{r}
+class(cars)
+
+cars_tbl <- as_tibble(cars)
+class(cars_tbl)
+````

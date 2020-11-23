@@ -21,6 +21,8 @@ navbar:
               href: ggplot_graphs.html
             - text: "machine learning"
               href: machine_learning.html
+            - text: Introduction to tidyverse
+              href: sales_analysis.html
     - text: "Links"
       href: links.html
 output_dir: "docs"

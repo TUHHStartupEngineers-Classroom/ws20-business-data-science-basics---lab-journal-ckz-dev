@@ -388,6 +388,9 @@ div.tocify {
     <li>
       <a href="machine_learning.html">machine learning</a>
     </li>
+    <li>
+      <a href="sales_analysis.html">Introduction to tidyverse</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -412,7 +415,219 @@ div.tocify {
 </div>
 
 
-<p><strong>NO ENTRY YET</strong></p>
+<div id="sales-analysis-intro-do-tidyverse-" class="section level1">
+<h1><span class="header-section-number">1</span> SALES ANALYSIS &amp; Intro do Tidyverse—-</h1>
+<div id="load-libraries--" class="section level2">
+<h2><span class="header-section-number">1.1</span> Load libraries —-</h2>
+<pre class="r"><code>library(tidyverse)
+library(readxl)</code></pre>
+</div>
+<div id="importing-files--" class="section level2">
+<h2><span class="header-section-number">1.2</span> Importing Files —-</h2>
+<pre class="r"><code>bikes_tbl &lt;- read_excel(&quot;~/Documents/GitHub/ws20-business-data-science-basics---lab-journal-ckz-dev/Raw_Data/Intro_to_tidyverse/bikes.xlsx&quot;)
+bikeshops_tbl &lt;- read_excel(&quot;~/Documents/GitHub/ws20-business-data-science-basics---lab-journal-ckz-dev/Raw_Data/Intro_to_tidyverse/bikeshops.xlsx&quot;)
+orderlines_tbl &lt;- read_excel(&quot;~/Documents/GitHub/ws20-business-data-science-basics---lab-journal-ckz-dev/Raw_Data/Intro_to_tidyverse/orderlines.xlsx&quot;)</code></pre>
+</div>
+<div id="examining-data--" class="section level2">
+<h2><span class="header-section-number">1.3</span> Examining Data —-</h2>
+<pre class="r"><code>glimpse(bikes_tbl)</code></pre>
+<pre><code>## Rows: 231
+## Columns: 9
+## $ bike.id        &lt;dbl&gt; 2875, 2873, 2874, 2876, 2877, 2225, 2091, 2086, 2088, …
+## $ model          &lt;chr&gt; &quot;Aeroad CF SL Disc 8.0 Di2&quot;, &quot;Aeroad CF SLX Disc 9.0 E…
+## $ model.year     &lt;dbl&gt; 2020, 2020, 2020, 2020, 2020, 2019, 2019, 2021, 2020, …
+## $ frame.material &lt;chr&gt; &quot;carbon&quot;, &quot;carbon&quot;, &quot;carbon&quot;, &quot;carbon&quot;, &quot;carbon&quot;, &quot;car…
+## $ weight         &lt;dbl&gt; 7.60, 7.27, 7.10, 7.73, 7.83, 6.80, 6.80, 7.60, 7.30, …
+## $ price          &lt;dbl&gt; 4579, 6919, 6429, 5069, 3609, 6139, 5359, 2629, 3699, …
+## $ category       &lt;chr&gt; &quot;Road - Race - Aeroad&quot;, &quot;Road - Race - Aeroad&quot;, &quot;Road …
+## $ gender         &lt;chr&gt; &quot;unisex&quot;, &quot;unisex&quot;, &quot;unisex&quot;, &quot;unisex&quot;, &quot;unisex&quot;, &quot;uni…
+## $ url            &lt;chr&gt; &quot;https://www.canyon.com/en-de/road-bikes/race-bikes/ae…</code></pre>
+<pre class="r"><code>glimpse(bikeshops_tbl)</code></pre>
+<pre><code>## Rows: 30
+## Columns: 5
+## $ bikeshop.id &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17…
+## $ name        &lt;chr&gt; &quot;Zum Goldenen Lenker&quot;, &quot;AlexandeRad&quot;, &quot;Fahrradladen 16&quot;, …
+## $ location    &lt;chr&gt; &quot;Berlin, Berlin&quot;, &quot;Hamburg, Hamburg&quot;, &quot;Munich, Bavaria&quot;, …
+## $ lat         &lt;dbl&gt; 52.51667, 53.57532, 48.15000, 50.93333, 50.11552, 48.7823…
+## $ lng         &lt;dbl&gt; 13.400000, 10.015340, 11.583333, 6.950000, 8.684167, 9.18…</code></pre>
+<pre class="r"><code>glimpse(orderlines_tbl)</code></pre>
+<pre><code>## Rows: 15,644
+## Columns: 7
+## $ ...1        &lt;chr&gt; &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;, &quot;10&quot;, &quot;11&quot;, …
+## $ order.id    &lt;dbl&gt; 1, 1, 2, 2, 3, 3, 3, 3, 3, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, …
+## $ order.line  &lt;dbl&gt; 1, 2, 1, 2, 1, 2, 3, 4, 5, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1, …
+## $ order.date  &lt;dttm&gt; 2015-01-07, 2015-01-07, 2015-01-10, 2015-01-10, 2015-01-…
+## $ customer.id &lt;dbl&gt; 2, 2, 10, 10, 6, 6, 6, 6, 6, 22, 8, 8, 8, 8, 16, 16, 16, …
+## $ product.id  &lt;dbl&gt; 2681, 2411, 2629, 2137, 2367, 1973, 2422, 2655, 2247, 240…
+## $ quantity    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, …</code></pre>
+</div>
+<div id="joining-data--" class="section level2">
+<h2><span class="header-section-number">1.4</span> Joining Data —-</h2>
+<pre class="r"><code>bikeshop_orderlines_bikes_joined_tbl &lt;- bikeshops_tbl %&gt;%
+  left_join(orderlines_tbl, by = c(&quot;bikeshop.id&quot; = &quot;customer.id&quot;)) %&gt;%
+  left_join(bikes_tbl, by = c(&quot;product.id&quot; = &quot;bike.id&quot;))
+glimpse(bikeshop_orderlines_bikes_joined_tbl)</code></pre>
+<pre><code>## Rows: 15,644
+## Columns: 19
+## $ bikeshop.id    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ name           &lt;chr&gt; &quot;Zum Goldenen Lenker&quot;, &quot;Zum Goldenen Lenker&quot;, &quot;Zum Gol…
+## $ location       &lt;chr&gt; &quot;Berlin, Berlin&quot;, &quot;Berlin, Berlin&quot;, &quot;Berlin, Berlin&quot;, …
+## $ lat            &lt;dbl&gt; 52.51667, 52.51667, 52.51667, 52.51667, 52.51667, 52.5…
+## $ lng            &lt;dbl&gt; 13.4, 13.4, 13.4, 13.4, 13.4, 13.4, 13.4, 13.4, 13.4, …
+## $ ...1           &lt;chr&gt; &quot;473&quot;, &quot;474&quot;, &quot;475&quot;, &quot;476&quot;, &quot;477&quot;, &quot;478&quot;, &quot;479&quot;, &quot;480&quot;…
+## $ order.id       &lt;dbl&gt; 70, 70, 70, 70, 70, 70, 70, 70, 70, 72, 72, 143, 179, …
+## $ order.line     &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 1, 1, 2, 3, 1, 1, 2, …
+## $ order.date     &lt;dttm&gt; 2015-03-28, 2015-03-28, 2015-03-28, 2015-03-28, 2015-…
+## $ product.id     &lt;dbl&gt; 2140, 2803, 2625, 2436, 2403, 2876, 2251, 2551, 2467, …
+## $ quantity       &lt;dbl&gt; 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 3, 1, 1, …
+## $ model          &lt;chr&gt; &quot;Speedmax CF 8.0 Di2&quot;, &quot;Precede:ON CF 8&quot;, &quot;Neuron 6&quot;, …
+## $ model.year     &lt;dbl&gt; 2020, 2021, 2021, 2020, 2020, 2020, 2021, 2021, 2020, …
+## $ frame.material &lt;chr&gt; &quot;carbon&quot;, &quot;carbon&quot;, &quot;aluminium&quot;, &quot;carbon&quot;, &quot;carbon&quot;, &quot;…
+## $ weight         &lt;dbl&gt; 8.50, 21.06, 15.26, 11.40, 7.40, 7.73, 15.80, 17.10, 1…
+## $ price          &lt;dbl&gt; 3599, 4189, 1849, 3599, 3219, 5069, 5649, 4869, 1749, …
+## $ category       &lt;chr&gt; &quot;Road - Triathlon Bike - Speedmax&quot;, &quot;E-Bikes - E-City …
+## $ gender         &lt;chr&gt; &quot;unisex&quot;, &quot;unisex&quot;, &quot;unisex&quot;, &quot;unisex&quot;, &quot;female&quot;, &quot;uni…
+## $ url            &lt;chr&gt; &quot;https://www.canyon.com/en-de/road-bikes/triathlon-bik…</code></pre>
+</div>
+<div id="wrangling-data--" class="section level2">
+<h2><span class="header-section-number">1.5</span> Wrangling Data —-</h2>
+<pre class="r"><code>bikeshop_orderlines_bikes_wrangled_tbl &lt;- bikeshop_orderlines_bikes_joined_tbl %&gt;%
+  # 5.1 separate locations
+  separate(col    = location,
+           into   = c(&quot;city&quot;, &quot;state&quot;),
+           sep    = &quot;, &quot;) %&gt;%
+  # 5.2 clean
+  select(-ends_with(&quot;.id&quot;),-city,-lat,-lng,-...1,-model,-model.year,-order.line,-frame.material,-weight,-category,-gender,-url) %&gt;%
+  # 5.3 Add the total price (price * quantity) 
+  mutate(total.price = price * quantity) %&gt;%
+  # 5.4 Rename
+  rename(bikeshop = name) %&gt;%
+  set_names(names(.) %&gt;% str_replace_all(&quot;\\.&quot;, &quot;_&quot;))
+
+glimpse(bikeshop_orderlines_bikes_wrangled_tbl)</code></pre>
+<pre><code>## Rows: 15,644
+## Columns: 6
+## $ bikeshop    &lt;chr&gt; &quot;Zum Goldenen Lenker&quot;, &quot;Zum Goldenen Lenker&quot;, &quot;Zum Golden…
+## $ state       &lt;chr&gt; &quot;Berlin&quot;, &quot;Berlin&quot;, &quot;Berlin&quot;, &quot;Berlin&quot;, &quot;Berlin&quot;, &quot;Berlin…
+## $ order_date  &lt;dttm&gt; 2015-03-28, 2015-03-28, 2015-03-28, 2015-03-28, 2015-03-…
+## $ quantity    &lt;dbl&gt; 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 3, 1, 1, 2, …
+## $ price       &lt;dbl&gt; 3599, 4189, 1849, 3599, 3219, 5069, 5649, 4869, 1749, 360…
+## $ total_price &lt;dbl&gt; 3599, 4189, 1849, 25193, 3219, 5069, 5649, 4869, 1749, 36…</code></pre>
+</div>
+<div id="business-insights--" class="section level2">
+<h2><span class="header-section-number">1.6</span> Business Insights —-</h2>
+<div id="sales-by-state--" class="section level3">
+<h3><span class="header-section-number">1.6.1</span> Sales by State —-</h3>
+<div id="step-1---manipulate" class="section level4">
+<h4><span class="header-section-number">1.6.1.1</span> Step 1 - Manipulate</h4>
+<pre class="r"><code>sales_by_state_tbl &lt;- bikeshop_orderlines_bikes_wrangled_tbl %&gt;%
+  # Select columns
+  select(state, total_price) %&gt;%
+  
+  # Grouping by year and summarizing sales
+  group_by(state) %&gt;% 
+  summarize(sales = sum(total_price)) %&gt;%
+  mutate(sales_text = scales::dollar(sales, big.mark = &quot;.&quot;, 
+                                     decimal.mark = &quot;,&quot;, 
+                                     prefix = &quot;&quot;, 
+                                     suffix = &quot; €&quot;))
+glimpse(sales_by_state_tbl)</code></pre>
+<pre><code>## Rows: 12
+## Columns: 3
+## $ state      &lt;chr&gt; &quot;Baden-Württemberg&quot;, &quot;Bavaria&quot;, &quot;Berlin&quot;, &quot;Bremen&quot;, &quot;Hambu…
+## $ sales      &lt;dbl&gt; 6521090, 6742819, 1128433, 10653499, 3874756, 1558901, 410…
+## $ sales_text &lt;chr&gt; &quot;6.521.090 €&quot;, &quot;6.742.819 €&quot;, &quot;1.128.433 €&quot;, &quot;10.653.499 €…</code></pre>
+</div>
+<div id="step-2---visualize" class="section level4">
+<h4><span class="header-section-number">1.6.1.2</span> Step 2 - Visualize</h4>
+<pre class="r"><code>sales_by_state_tbl%&gt;%
+  
+  # Setup canvas with the columns states (x-axis) and sales (y-axis)
+  ggplot(aes(x = state, y = sales)) +
+  # Geometries
+  geom_col(fill = &quot;#2DC6D6&quot;) + # Use geom_col for a bar plot
+  geom_text(aes(label = sales_text),angle = 90,hjust=&quot;bottom&quot;,nudge_y = 100000) + # Adding labels to the bars
+  # Formatting
+  scale_y_continuous(labels = scales::dollar_format(big.mark = &quot;.&quot;, 
+                                                    decimal.mark = &quot;,&quot;, 
+                                                    prefix = &quot;&quot;, 
+                                                    suffix = &quot; €&quot;),n.breaks = 8, limits = c(0,12000000)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  labs(
+    title    = &quot;Revenue per state&quot;,
+    # Dynamischer Subtitle mit paste Funktion 
+    subtitle = paste(sales_by_state_tbl$state[sales_by_state_tbl$sales==max(sales_by_state_tbl$sales)],&quot;has the highest revenue&quot;),
+    x = &quot;&quot;, # Override defaults for x and y
+    y = &quot;Revenue&quot;
+  )</code></pre>
+<p><img src="journal_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+</div>
+<div id="sales-by-year-and-state--" class="section level3">
+<h3><span class="header-section-number">1.6.2</span> Sales by Year and State —-</h3>
+<pre class="r"><code>library(lubridate)</code></pre>
+<div id="step-1---manipulate-1" class="section level4">
+<h4><span class="header-section-number">1.6.2.1</span> Step 1 - Manipulate</h4>
+<pre class="r"><code>sales_by_year_state_tbl &lt;- bikeshop_orderlines_bikes_wrangled_tbl %&gt;%
+  # Select columns and add a year
+  select(order_date, total_price, state) %&gt;%
+  mutate(year = year(order_date)) %&gt;%
+  # Group by and summarize year and main catgegory
+  group_by(year, state) %&gt;%
+  summarise(sales = sum(total_price)) %&gt;%
+  ungroup() %&gt;%
+  # Format $ Text
+  mutate(sales_text = scales::dollar(sales, big.mark = &quot;.&quot;, 
+                                     decimal.mark = &quot;,&quot;, 
+                                     prefix = &quot;&quot;, 
+                                     suffix = &quot; €&quot;))
+
+glimpse(sales_by_year_state_tbl)</code></pre>
+<pre><code>## Rows: 60
+## Columns: 4
+## $ year       &lt;dbl&gt; 2015, 2015, 2015, 2015, 2015, 2015, 2015, 2015, 2015, 2015…
+## $ state      &lt;chr&gt; &quot;Baden-Württemberg&quot;, &quot;Bavaria&quot;, &quot;Berlin&quot;, &quot;Bremen&quot;, &quot;Hambu…
+## $ sales      &lt;dbl&gt; 1031924, 1301461, 95853, 1395912, 423090, 308609, 584386, …
+## $ sales_text &lt;chr&gt; &quot;1.031.924 €&quot;, &quot;1.301.461 €&quot;, &quot;95.853 €&quot;, &quot;1.395.912 €&quot;, &quot;…</code></pre>
+</div>
+<div id="step-2---visualize-1" class="section level4">
+<h4><span class="header-section-number">1.6.2.2</span> Step 2 - Visualize</h4>
+<pre class="r"><code>sales_by_year_state_tbl %&gt;%
+  # Set up x, y, fill
+  ggplot(aes(x = year, y = sales, fill = state)) +
+  
+  # Geometries
+  geom_col()+ # Run up to here to get a stacked bar plot
+  
+  # Facet
+  facet_wrap(~ state)+
+  
+  # Trendline
+  geom_smooth(method = &quot;lm&quot;, se = FALSE) +
+  
+  # Formatting
+  scale_y_continuous(labels = scales::dollar_format(big.mark = &quot;.&quot;, 
+                                                    decimal.mark = &quot;,&quot;, 
+                                                    prefix = &quot;&quot;, 
+                                                    suffix = &quot; €&quot;)) +
+  labs(
+    title = &quot;Revenue by year and state&quot;,
+    subtitle = &quot;North Rhine-Westphalia has the highest upward trend&quot;,
+    fill = &quot;State&quot; # Changes the legend name
+  )</code></pre>
+<p><img src="journal_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="writing-files--" class="section level2">
+<h2><span class="header-section-number">1.7</span> Writing Files —-</h2>
+<div id="rds--" class="section level3">
+<h3><span class="header-section-number">1.7.1</span> RDS —-</h3>
+<pre class="r"><code>bikeshop_orderlines_bikes_wrangled_tbl %&gt;% 
+  write_rds(&quot;~/Documents/GitHub/ws20-business-data-science-basics---lab-journal-ckz-dev/Manipulated_Data/Intro_to_tidyverse/bikeshop_orderlines.rds&quot;)</code></pre>
+</div>
+</div>
+</div>
 
 
 

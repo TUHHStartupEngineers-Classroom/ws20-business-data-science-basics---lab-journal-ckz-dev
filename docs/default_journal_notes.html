@@ -388,6 +388,9 @@ div.tocify {
     <li>
       <a href="machine_learning.html">machine learning</a>
     </li>
+    <li>
+      <a href="sales_analysis.html">Introduction to tidyverse</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -416,7 +419,7 @@ div.tocify {
 <p>This is an <code>.Rmd</code> file. It is plain text with special features. Any time you write just like this, it will be compiled to normal text in the website. If you put a # in front of your text, it will create a top level-header.</p>
 <div id="my-first-post" class="section level1">
 <h1><span class="header-section-number">1</span> My first post</h1>
-<p>Last compiled: 2020-11-19</p>
+<p>Last compiled: 2020-11-23</p>
 <p>Notice that whatever you define as a top level header, automatically gets put into the table of contents bar on the left.</p>
 <div id="second-level-header" class="section level2">
 <h2><span class="header-section-number">1.1</span> Second level header</h2>
@@ -429,7 +432,7 @@ div.tocify {
 </div>
 <div id="my-second-post-note-the-order" class="section level1">
 <h1><span class="header-section-number">2</span> My second post (note the order)</h1>
-<p>Last compiled: 2020-11-19</p>
+<p>Last compiled: 2020-11-23</p>
 <p>I’m writing this tutorial going from the top down. And, this is how it will be printed. So, notice the second post is second in the list. If you want your most recent post to be at the top, then make a new post starting at the top. If you want the oldest first, do, then keep adding to the bottom</p>
 </div>
 <div id="adding-r-stuff" class="section level1">
@@ -450,6 +453,12 @@ numbers[1:10]</code></pre>
 <pre class="r"><code># This will plot a histogram of 100 random elements of the vector numbers
 hist(sample(numbers, 100, replace = T))</code></pre>
 <p><img src="default_journal_notes_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Working with Tribble</p>
+<pre class="r"><code>class(cars)</code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<pre class="r"><code>cars_tbl &lt;- as_tibble(cars)
+class(cars_tbl)</code></pre>
+<pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
 </div>
 </div>
 
