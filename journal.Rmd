@@ -1,5 +1,5 @@
 ---
-title: "Journal (reproducible report)"
+title: "Journal Challenge 1"
 author: "David Hackenberger"
 date: "2020-11-019"
 output:
@@ -19,27 +19,27 @@ knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
 # SALES ANALYSIS & Intro do Tidyverse----
 
 ## Load libraries ----
-````{r}
+```{r}
 library(tidyverse)
 library(readxl)
 ```
 
 ## Importing Files ----
-````{r}
+```{r}
 bikes_tbl <- read_excel("~/Documents/GitHub/ws20-business-data-science-basics---lab-journal-ckz-dev/Raw_Data/Intro_to_tidyverse/bikes.xlsx")
 bikeshops_tbl <- read_excel("~/Documents/GitHub/ws20-business-data-science-basics---lab-journal-ckz-dev/Raw_Data/Intro_to_tidyverse/bikeshops.xlsx")
 orderlines_tbl <- read_excel("~/Documents/GitHub/ws20-business-data-science-basics---lab-journal-ckz-dev/Raw_Data/Intro_to_tidyverse/orderlines.xlsx")
 ```
 
 ## Examining Data ----
-````{r}
+```{r}
 glimpse(bikes_tbl)
 glimpse(bikeshops_tbl)
 glimpse(orderlines_tbl)
 ```
 
 ## Joining Data ----
-````{r}
+```{r}
 bikeshop_orderlines_bikes_joined_tbl <- bikeshops_tbl %>%
   left_join(orderlines_tbl, by = c("bikeshop.id" = "customer.id")) %>%
   left_join(bikes_tbl, by = c("product.id" = "bike.id"))
@@ -47,7 +47,7 @@ glimpse(bikeshop_orderlines_bikes_joined_tbl)
 ```
 
 ## Wrangling Data ----
-````{r}
+```{r}
 bikeshop_orderlines_bikes_wrangled_tbl <- bikeshop_orderlines_bikes_joined_tbl %>%
   # 5.1 separate locations
   separate(col    = location,
@@ -68,7 +68,7 @@ glimpse(bikeshop_orderlines_bikes_wrangled_tbl)
 ### Sales by State ----
 
 #### Step 1 - Manipulate
-````{r}
+```{r}
 sales_by_state_tbl <- bikeshop_orderlines_bikes_wrangled_tbl %>%
   # Select columns
   select(state, total_price) %>%
@@ -84,7 +84,7 @@ glimpse(sales_by_state_tbl)
 ```
 
 #### Step 2 - Visualize
-````{r}
+```{r}
 sales_by_state_tbl%>%
   
   # Setup canvas with the columns states (x-axis) and sales (y-axis)
@@ -108,12 +108,12 @@ sales_by_state_tbl%>%
 ```
 
 ### Sales by Year and State ----
-````{r}
+```{r}
 library(lubridate)
 ```
 
 #### Step 1 - Manipulate
-````{r}
+```{r}
 sales_by_year_state_tbl <- bikeshop_orderlines_bikes_wrangled_tbl %>%
   # Select columns and add a year
   select(order_date, total_price, state) %>%
@@ -132,7 +132,7 @@ glimpse(sales_by_year_state_tbl)
 ```
   
 #### Step 2 - Visualize
-````{r}
+```{r}
 sales_by_year_state_tbl %>%
   # Set up x, y, fill
   ggplot(aes(x = year, y = sales, fill = state)) +
@@ -162,7 +162,7 @@ sales_by_year_state_tbl %>%
 ## Writing Files ----
 
 ### RDS ----
-````{r}
+```{r}
 bikeshop_orderlines_bikes_wrangled_tbl %>% 
   write_rds("~/Documents/GitHub/ws20-business-data-science-basics---lab-journal-ckz-dev/Manipulated_Data/Intro_to_tidyverse/bikeshop_orderlines.rds")
 ```

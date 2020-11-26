@@ -8,7 +8,11 @@ navbar:
     - text: "Home"
       href: index.html
     - text: "Journal"
-      href: journal.html
+      menu:
+            - text: "Challenge 1 - tidyverse"
+              href: journal.html
+            - text: "Challenge 2a - API"
+              href: challenge_2a.html
     - text: "Class notes"
       menu:
             - text: "Dictionary"
@@ -21,7 +25,7 @@ navbar:
               href: ggplot_graphs.html
             - text: "machine learning"
               href: machine_learning.html
-            - text: Introduction to tidyverse
+            - text: "Introduction to tidyverse""
               href: sales_analysis.html
     - text: "Links"
       href: links.html

@@ -17,11 +17,15 @@ rmarkdown::render_site(encoding = 'UTF-8')
 
 #system( paste0("staticrypt ./docs/journal.html ", Sys.getenv("LAB_KEY")) )
 system( paste0("staticrypt ./docs/journal.html ", LAB_KEY) )
+system( paste0("staticrypt ./docs/challenge_2.html ", LAB_KEY) )
 
 # Remove and rename resulting files
 file.remove("./docs/journal.html")
+file.remove("./docs/challenge_2.html")
 file.rename(from = "./docs/journal_encrypted.html", 
             to   = "./docs/journal.html")
+file.rename(from = "./docs/challenge_2_encrypted.html", 
+            to   = "./docs/challenge_2.html")
 
 # Open local html file in your browser
 browseURL("./docs/index.html")
