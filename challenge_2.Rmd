@@ -7,13 +7,13 @@ output:
     toc: true
     toc_float: true
     collapsed: false
-    number_sections: true
+    number_sections: false
     toc_depth: 3
     #code_folding: hide
 ---
 
 # Challange Data Aquisition
-# Challange Part 1
+# 1. Challange Part 1
 We want to compile an overview of drinks based on the liquor gin.
 For this we use the online database thecocktaildb and the provided API.
 
@@ -108,7 +108,8 @@ library(furrr)     # Parallel Processing using furrr (iteration)
 plan("multiprocess")
 
 Gin_drinks_tbl <- future_map(list_of_Gin_drinks_tbl$ID, get_Details) %>% 
-  rbindlist(use.names=TRUE, fill=FALSE, idcol=NULL)
+  rbindlist(use.names=TRUE, fill=FALSE, idcol=NULL) %>% 
+  as_tibble()
 
 #Rename, beacuse most of the collums start with str
 colnames(Gin_drinks_tbl) = gsub("str", "", colnames(Gin_drinks_tbl))
@@ -133,4 +134,188 @@ Gin_drinks_tbl %>%
   write_rds("~/Documents/GitHub/ws20-business-data-science-basics---lab-journal-ckz-dev/Manipulated_Data/Data_aquisition/Gin_drinks.rds")
 ```
 
-# Challange Part 2
+# 2. Challange Part 2
+## Question
+We want to build a dataset buy web scapping from the Rosebike webshop.
+The scope is a database with the model names and prices, not just for one category but for all products.
+#### New libraries
+```{r}
+library(rvest)
+library(stringi)   # character string/text processing
+```
+We can use the selector Gadget to get more information about the website structure.
+#### get css /x path selector Gadget, run in searchbar
+```{r eval=FALSE}
+javascript:(function()%7Bvar%20s=document.createElement('div');s.innerHTML=
+              'Loading...';s.style.color='black';s.style.padding='20px';s.style.position=
+              'fixed';s.style.zIndex='9999';s.style.fontSize='3.0em';s.style.border=
+              '2px%20solid%20black';s.style.right='40px';s.style.top='40px';s.setAttribute
+            ('class','selector_gadget_loading');s.style.background='white';document.body.appendChild(s);s=
+              document.createElement('script');s.setAttribute('type','text/javascript');s.setAttribute
+            ('src','https://dv0akt2986vzh.cloudfront.net/unstable/lib/selectorgadget.js');document.body.appendChild(s);%7D)();
+```
+
+## Get URLs for product categories
+The categories can be scapped from the navigation bar at the top right and acessed via the titles.
+
+```{r}
+url_home          <- "https://www.rosebikes.de"
+#xopen(url_home) # Open links directly from RStudio to inspect them
+
+# Read in the HTML for the entire webpage
+html_home         <- read_html(url_home)
+
+# Web scrape the categroies
+bike_category_url_tbl <- html_home %>%
+
+  # Get the nodes for the families with the title description. The pointer is unique for bicycle categories.
+  html_nodes(css = ".main-navigation-category-with-tiles__item > a") %>% 
+  # ...and extract the information of the href
+  html_attr("href") %>% 
+
+  # Remove the product categorie sale because these bikes are parrt of other categoreis as well
+  discard(.p = ~stringr::str_detect(.x,"sale")) %>% 
+
+  # Convert vector to tibble
+  enframe(name = "position", value = "subdirectory") %>% 
+  as_tibble() %>% 
+  
+  # Create a additinal collumn to store the url to each sub-page
+  mutate(url = glue("{url_home}{subdirectory}"))
+```
+
+## Get URLs for product families
+Now we have a tbl with the url links to each product category. From there we can get the product families which contain the bike models.
+For that we set up a function that gets the families the same way as we got the categories for each category.
+
+```{r}
+#Function to get the subdirectories for the bike families
+get_bike_family_subd <- function(url) {
+  html_bike_family <- read_html(url)
+  bike_category_family_tbl <-  html_bike_family %>% 
+  html_nodes(css = ".catalog-category-bikes__list-item > div > a") %>% 
+  html_attr("href") %>% 
+  # Convert vector to tibble
+  enframe(name = "position_cf", value = "subdirectory_cf") %>% 
+  as_tibble()
+               
+}
+
+#Mapping the function with every bike category
+bike_family_url_tbl <- map(bike_category_url_tbl$url,get_bike_family_subd) %>%
+  # Unpack the mapped list and convert it to a tibble
+  rbindlist(use.names=TRUE, fill=FALSE, idcol=NULL) %>% 
+  as_tibble() %>% 
+  # create a extra collumn to store the link to each product family page
+  mutate(url = glue("{url_home}{subdirectory_cf}")) %>% 
+  # organize
+  select(url,subdirectory_cf) %>% 
+  # convert glue to char
+  mutate(url = as.character(url))
+```
+
+## Excess product data
+Now its time to excesses each product family page and gather the information about the different product variations. Each bike may have more than one variation to buy it, which have a different name and price of course.
+For this, we set up a function that builds the dataset step by step from each url we collected before.
+
+```{r}
+# function to gather information about the product variatinos
+get_bike_info <- function(url,subd) {
+  # read each family page
+  html_bike_model <- read_html(url)
+  # get the names of the different variants
+  bike_info_names_tbl <-  html_bike_model %>% 
+      # the info is stored in the box title again
+      html_nodes(css = ".catalog-category-model__title") %>%
+      # get the text
+      html_text() %>% 
+      # get rid of unwanted characters
+      str_remove(pattern = "\n") %>% 
+      str_remove(pattern = "\n") %>% 
+      # convert to list
+      enframe(name = "position", value = "model") %>% 
+      # Convert vector to tibble
+      as_tibble()
+  
+  # get the prices for each variant in the same way as we got the names
+  bike_info_price_tbl <- html_bike_model %>% 
+    html_nodes(css = ".product-tile-price__current-value.catalog-category-model__price-current-value") %>% 
+    html_text() %>% 
+    str_remove(pattern = "\n") %>% 
+    str_remove(pattern = "\n") %>%
+    enframe(name = "position", value = "price") %>% 
+    # Convert vector to tibble
+    as_tibble() %>% 
+    # Converts prices from strings to integers for later calculations
+    #Convert € strg to numeric value
+    mutate(price = gsub("\\.","",price),price = gsub(",00","",price),price = gsub("€","",price),price = as.numeric(price))
+  
+  # Creating a dataset putting together Category, Family, Model, price, url
+  bike_model_collected_info_tbl <- left_join(bike_info_names_tbl,bike_info_price_tbl,by = "position") %>% mutate(link = url, Category_Family = subd) %>% 
+    # to get the category and family we seperate the subdirectory wich is seperated by /
+    separate(col = Category_Family, into = c("category_1","category_2","category","family"),
+        sep = "/",extra = "drop") %>% 
+    # get rid of unwanted cahacters
+    mutate(family = gsub("\\-", "",family))
+  
+  # asaamble the dataset
+  bike_model_info_tbl <-   bike_model_collected_info_tbl %>% 
+    # Delet unessesarry columns 
+    select(-position,-category_1,-category_2) %>% 
+    #Restructure
+    select(category,family,model,price,link)
+    
+}
+```
+
+## Test the function
+Test for one
+```{r}
+bike_model_info_tbl_1 <- get_bike_info(bike_family_url_tbl$url[1],bike_family_url_tbl$subdirectory_cf[1])
+```
+
+## Assamble dataset
+As this works we can use the function to get the information for every product.
+```{r}
+library(furrr)
+plan("multiprocess")
+# Future_map2 to map over several inputs
+rose_bike_products_tbl <- future_map2(bike_family_url_tbl$url,bike_family_url_tbl$subdirectory_cf,get_bike_info) %>% 
+  rbindlist(use.names=TRUE, fill=FALSE, idcol=NULL) %>% 
+  as_tibble()
+```
+
+## Resulting Data
+```{r results = "asis"}
+options(knitr.table.format = "html") 
+kbl(rose_bike_products_tbl[1:10, ]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"),fixed_thead = T) %>%
+  column_spec(3, width = "30em") %>% 
+  column_spec(5, width = "50em") %>% 
+  scroll_box(width = "100%", height = "400px")
+```
+
+## Writing Files
+### RDS
+```{r}
+rose_bike_products_tbl %>% 
+  write_rds("~/Documents/GitHub/ws20-business-data-science-basics---lab-journal-ckz-dev/Manipulated_Data/Data_aquisition/rose_bike_products.rds")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
