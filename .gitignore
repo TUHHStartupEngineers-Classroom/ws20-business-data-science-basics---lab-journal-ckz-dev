@@ -37,3 +37,10 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+*.tsv
+*.rds
+*.xlsx
+*.icloud
+*.rds
+*.rds
+Manipulated_Data/Intro_to_tidyverse/bike_orderlines.rds
