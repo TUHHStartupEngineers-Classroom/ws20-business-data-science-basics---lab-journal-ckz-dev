@@ -100,7 +100,7 @@ registerDoMC(cores = numCores)
 
 # import the assignee table
 assignee_tbl <- vroom(
-            file       = "Raw_Data/Data_wrangling/assignee.tsv", 
+            file       = "./Raw_Data/Data_wrangling/assignee.tsv", 
             delim      = "\t", 
             col_types  = col_types_assignee,
             na         = c("", "NA", "NULL")
@@ -108,7 +108,7 @@ assignee_tbl <- vroom(
 
 # import the patent table
 patent_tbl <- vroom(
-            file       = "Raw_Data/Data_wrangling/patent.tsv", 
+            file       = "./Raw_Data/Data_wrangling/patent.tsv", 
             delim      = "\t", 
             col_types  = col_types_patent,
             na         = c("", "NA", "NULL")
@@ -116,7 +116,7 @@ patent_tbl <- vroom(
 
 # import the patent_assignee table
 patent_assignee_tbl <- vroom(
-            file       = "Raw_Data/Data_wrangling/patent_assignee.tsv", 
+            file       = "./Raw_Data/Data_wrangling/patent_assignee.tsv", 
             delim      = "\t", 
             col_types  = col_types_patent_assignee,
             na         = c("", "NA", "NULL")
@@ -124,7 +124,7 @@ patent_assignee_tbl <- vroom(
 
 # import the uspc table
 uspc_tbl <- vroom(
-            file       = "Raw_Data/Data_wrangling/uspc.tsv", 
+            file       = "./Raw_Data/Data_wrangling/uspc.tsv", 
             delim      = "\t", 
             col_types  = col_types_uspc,
             na         = c("", "NA", "NULL")
@@ -132,7 +132,7 @@ uspc_tbl <- vroom(
 
 # import uspc calss description with mainclass_current
 mainclass_current_tbl <- vroom(
-            file       = "Raw_Data/Data_wrangling/mainclass_current.tsv", 
+            file       = "./Raw_Data/Data_wrangling/mainclass_current.tsv", 
             delim      = "\t", 
             col_types  = col_types_maincalss_current,
             na         = c("", "NA", "NULL")
@@ -252,13 +252,13 @@ top_10_us_companies_patents_uspc <- merge(x = top_10_us_companies_patents, y = Q
                        all.x = TRUE, 
                        all.y = FALSE)[,.(organization,patent_id,mainclass_id)]
 # 5. Merge with maincalsses_current to get info about uspc calsses
-Q3_data <- merge(x = top_10_us_companies_patents_uspc, y = mainclass_current, 
+Q3_data <- merge(x = top_10_us_companies_patents_uspc, y = mainclass_current_tbl, 
                        by.x    = "mainclass_id",
                        by.y    = "id",
                        all.x = TRUE, 
                        all.y = FALSE)
 # 6. Group by uspc classes, count entries and order descending including the description of the mainclasses
-top_uspc_main_classes <- Q3_data[,.N,by = .(mainclass_id,title)][order(-N),.(mainclass_id,title,uspc_usage_by_top_10_US_comp=N)]
+top_uspc_main_classes <- Q3_data[!is.na(mainclass_id),.N,by = .(mainclass_id,title)][order(-N),.(mainclass_id,title,uspc_usage_by_top_10_US_comp=N)]
 ```
 
 ### View Results
