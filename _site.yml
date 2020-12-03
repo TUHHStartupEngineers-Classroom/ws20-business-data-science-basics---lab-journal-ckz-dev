@@ -13,6 +13,8 @@ navbar:
               href: challenge_1.html
             - text: "Challenge 2 - Data Acquisition"
               href: challenge_2.html
+            - text: "Challenge 3 - Data Wrangling"
+              href: challenge_3.html
     - text: "Class notes"
       menu:
             - text: "Dictionary"

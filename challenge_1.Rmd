@@ -84,7 +84,7 @@ glimpse(sales_by_state_tbl)
 ```
 
 ### Step 2 - Visualize
-```{r}
+```{r plot_1, fig.width=10, fig.height=7}
 sales_by_state_tbl%>%
   
   # Setup canvas with the columns states (x-axis) and sales (y-axis)
@@ -132,7 +132,7 @@ glimpse(sales_by_year_state_tbl)
 ```
   
 ### Step 2 - Visualize
-```{r}
+```{r plot_2, fig.width=10, fig.height=7}
 sales_by_year_state_tbl %>%
   # Set up x, y, fill
   ggplot(aes(x = year, y = sales, fill = state)) +
