@@ -12,7 +12,7 @@ output:
     #code_folding: hide
 ---
 
-# Challenge 3
+# Challange Data Visualisation
 
 ## Part 1
 Map the time course of the cumulative Covid-19 cases!

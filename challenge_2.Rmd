@@ -174,7 +174,8 @@ bike_category_url_tbl <- html_home %>%
   html_attr("href") %>% 
 
   # Remove the product categorie sale because these bikes are parrt of other categoreis as well
-  discard(.p = ~stringr::str_detect(.x,"sale")) %>% 
+  #discard(.p = ~stringr::str_detect(.x,"e-bike")) # the webiste was adapted and it stoped working, thereofre we are only continuing with the first 5 categories.
+  .[1:5] %>% 
 
   # Convert vector to tibble
   enframe(name = "position", value = "subdirectory") %>% 
@@ -200,11 +201,30 @@ get_bike_family_subd <- function(url) {
   as_tibble()
                
 }
-
-#Mapping the function with every bike category
-bike_family_url_tbl <- map(bike_category_url_tbl$url,get_bike_family_subd) %>%
+```
+Mapping the function with every bike category
+Alternative 1: with the map function (it ran before and nor gets a pare error, therefore alternative 2)
+```{r eval=FALSE}
+bike_family_url_tbl <- map(bike_category_url_tbl$url,get_bike_family_subd) %>% 
   # Unpack the mapped list and convert it to a tibble
   rbindlist(use.names=TRUE, fill=FALSE, idcol=NULL) %>% 
+  as_tibble() %>% 
+  # create a extra collumn to store the link to each product family page
+  mutate(url = glue("{url_home}{subdirectory_cf}")) %>% 
+  # organize
+  select(url,subdirectory_cf) %>% 
+  # convert glue to char
+  mutate(url = as.character(url))
+```
+Alternative 2: manually
+```{r}
+bike_family_url_tbl_1 <- get_bike_family_subd(bike_category_url_tbl$url[1]) 
+bike_family_url_tbl_2 <- get_bike_family_subd(bike_category_url_tbl$url[2]) 
+bike_family_url_tbl_3 <- get_bike_family_subd(bike_category_url_tbl$url[3])
+bike_family_url_tbl_4 <- get_bike_family_subd(bike_category_url_tbl$url[4])
+bike_family_url_tbl_5 <- get_bike_family_subd(bike_category_url_tbl$url[5])
+
+bike_family_url_tbl <- rbind(bike_family_url_tbl_1, bike_family_url_tbl_2,bike_family_url_tbl_3,bike_family_url_tbl_4,bike_family_url_tbl_5) %>% 
   as_tibble() %>% 
   # create a extra collumn to store the link to each product family page
   mutate(url = glue("{url_home}{subdirectory_cf}")) %>% 
