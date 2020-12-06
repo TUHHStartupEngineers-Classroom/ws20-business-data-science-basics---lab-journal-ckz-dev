@@ -19,17 +19,21 @@ rmarkdown::render_site(encoding = 'UTF-8')
 system( paste0("staticrypt ./docs/challenge_1.html ", LAB_KEY) )
 system( paste0("staticrypt ./docs/challenge_2.html ", LAB_KEY) )
 system( paste0("staticrypt ./docs/challenge_3.html ", LAB_KEY) )
+system( paste0("staticrypt ./docs/challenge_4.html ", LAB_KEY) )
 
 # Remove and rename resulting files
 file.remove("./docs/challenge_1.html")
 file.remove("./docs/challenge_2.html")
 file.remove("./docs/challenge_3.html")
+file.remove("./docs/challenge_4.html")
 file.rename(from = "./docs/challenge_1_encrypted.html", 
             to   = "./docs/challenge_1.html")
 file.rename(from = "./docs/challenge_2_encrypted.html", 
             to   = "./docs/challenge_2.html")
 file.rename(from = "./docs/challenge_3_encrypted.html", 
             to   = "./docs/challenge_3.html")
+file.rename(from = "./docs/challenge_4_encrypted.html", 
+            to   = "./docs/challenge_4.html")
 
 # Open local html file in your browser
 browseURL("./docs/index.html")
